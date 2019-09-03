@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssm.dao.EmployeeDao">
+	<resultMap id="employee" type="ssm.entity.Employee">
+		<id property="username" column="username"/>
+		<result property="deptid" column="deptid"/>
+		<result property="age" column="age"/>
+		<result property="sex" column="sex"/>
+		<association property="dept" javaType="ssm.entity.Department">
+			<id property="id" column="id"/>
+			<result property="deptname" column="deptname"/>
+		</association>
+	</resultMap>
+	<insert id="insertEmployee" parameterType="ssm.entity.Employee">
+		insert into employee(username,deptid,age,sex)
+		values(#{username},#{deptid},#{age},#{sex})
+	</insert>
+	
+	<select id="getCntByUsername" parameterType="string" resultType="int">
+		select count(1) from employee where username=#{username}
+	</select>
+	
+	<select id="getEmployees" resultMap="employee">
+		select * from employee e
+		left join department d on e.deptid=d.id
+	</select>
+	
+	<delete id="delEmp" parameterType="string">
+		delete from employee where username=#{username}
+	</delete>
+	
+	<select id="getEmployeeByUsername" parameterType="string" resultMap="employee">
+		select * from employee
+		where username=#{username}
+	</select>
+	
+	<update id="updateEmp" parameterType="ssm.entity.Employee">
+		update employee
+		set sex=#{sex},age=#{age},deptid=#{deptid}
+		where username=#{username}
+	</update>
+</mapper>
